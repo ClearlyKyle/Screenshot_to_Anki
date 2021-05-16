@@ -3,7 +3,7 @@
   "name": "Screenshot to Anki",
   "description": "Send a screenshot of a youtube video to Anki",
   "version": "1.0",
-  "author": "Kyle McIntosh",
+  "author": "@clearlykyle",
   "permissions": [
     "storage"
   ],
