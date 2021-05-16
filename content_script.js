@@ -9,9 +9,10 @@ function load_button() {
 	ss_btn.innerHTML = "Anki";
 	ss_btn.className = "btn_save_screenshot ytp-button";
 	ss_btn.style.width = "auto";
-	// ss_btn.style.cssFloat = "left";
+	ss_btn.style.cssFloat = "left";
+	ss_btn.style.marginRight = "10px";
 	ss_btn.onclick = send_to_anki;
-	document.getElementsByClassName("ytp-left-controls")[0].appendChild(ss_btn);
+	document.getElementsByClassName("ytp-right-controls")[0].prepend(ss_btn);
 
 	console.log("Loaded Button");
 }
