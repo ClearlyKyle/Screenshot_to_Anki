@@ -1,0 +1,26 @@
+{
+  "manifest_version": 2,
+  "name": "Screenshot to Anki",
+  "description": "Send a screenshot of a youtube video to Anki",
+  "version": "1.0",
+  "author": "Kyle McIntosh",
+  "permissions": [
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "all_frames": true,
+      "js": [
+        "content_script.js"
+      ],
+      "matches": [
+        "*://*.youtube.com/watch*"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "browser_action": {
+    "default_title": "Screenshot to Anki",
+    "default_popup": "popup/popup.html"
+  }
+}
