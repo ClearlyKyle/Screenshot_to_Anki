@@ -3,6 +3,14 @@ console.log("----- [content_script.js] LOADED");
 
 load_button();
 
+var tata_settings = {
+	position: "tr",
+	duration: 2000,
+	progress: true,
+	animation: 'slide',
+	holding: false
+}
+
 function load_button() {
 	// Create Screen Shot Button
 	var ss_btn = document.createElement("button");
@@ -99,9 +107,14 @@ function send_to_anki() {
 			})
 				.then((res) => res.json())
 				.then((data) => {
-					console.log("Permission Granted")
-					console.log(data);
-
+					if(data.error === null) {
+						console.log("Permission Granted")
+						console.log(data);
+					} else {
+						console.log("Permission Failed")
+						console.log(data);
+						return
+					}
 					fetch(url, {
 						method: "POST",
 						body: JSON.stringify(card_data),
@@ -110,9 +123,10 @@ function send_to_anki() {
 						.then((data) => {
 							console.log("Fetch Return:")
 							if (data.result === null) {
-								alert("Error!\n" + data.error)
+								tata.error('Error', data.error, tata_settings)
+								return
 							}
-							console.log("Sucess")
+							tata.success('Sucess', 'Sucessfully sent to Anki.', tata_settings)
 						})
 						.catch((error) => console.log(error));
 				});

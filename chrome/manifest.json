@@ -11,7 +11,8 @@
     {
       "all_frames": true,
       "js": [
-        "content_script.js"
+        "content_script.js", 
+		"resources/tata.js"
       ],
       "matches": [
         "*://*.youtube.com/watch*"
