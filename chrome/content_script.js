@@ -56,11 +56,14 @@ function send_to_anki() {
 	console.log(youtube_url)
 
 	console.log("loading user settings")
-	chrome.storage.local.get(["ankiDeckNameSel", "ankiModelNameSel", "ankiFieldScreenshot", "ankiFieldURL",],
-		({ ankiDeckNameSel, ankiModelNameSel, ankiFieldScreenshot, ankiFieldURL, ankiConnectUrl, }) => {
+	chrome.storage.local.get(["ankiDeckNameSel", "ankiNoteNameSel", "ankiFieldScreenshot", "ankiFieldURL", "ankiConnectUrl"],
+		({ ankiDeckNameSel, ankiNoteNameSel, ankiFieldScreenshot, ankiFieldURL, ankiConnectUrl }) => {
+
+			console.log("local.get Data:")
+			console.log({ ankiDeckNameSel, ankiNoteNameSel, ankiFieldScreenshot, ankiFieldURL, ankiConnectUrl })
 
 			url = ankiConnectUrl || "http://localhost:8765/";
-			model = ankiModelNameSel || "Basic";
+			model = ankiNoteNameSel || "Basic";
 			deck = ankiDeckNameSel || "Default";
 
 			var fields = {
@@ -86,6 +89,9 @@ function send_to_anki() {
 									"modelName": model,
 									"deckName": deck,
 									"fields": fields,
+									"options": {
+										"allowDuplicate": false
+									},
 									"tags": ["Youtube2Anki"],
 								},
 							},
@@ -93,6 +99,9 @@ function send_to_anki() {
 					],
 				},
 			};
+
+			console.log("Card Data...")
+			console.log(card_data)
 
 			var permission_data = {
 				"action": "requestPermission",
@@ -107,14 +116,14 @@ function send_to_anki() {
 			})
 				.then((res) => res.json())
 				.then((data) => {
-					if(data.error === null) {
-						console.log("Permission Granted")
-						console.log(data);
-					} else {
+					if (data.error !== null) {
 						console.log("Permission Failed")
 						console.log(data);
 						return
 					}
+					console.log("Permission Granted")
+					console.log(data);
+					
 					fetch(url, {
 						method: "POST",
 						body: JSON.stringify(card_data),
@@ -122,15 +131,21 @@ function send_to_anki() {
 						.then((res) => res.json())
 						.then((data) => {
 							console.log("Fetch Return:")
-							if (data.result === null) {
+							console.log(data)
+							if (data[0].result === null) {
 								tata.error('Error', data.error, tata_settings)
 								return
 							}
+							if (data[1].result === null) {
+								tata.error('Error', data[1].error, tata_settings)
+								return
+							}
 							tata.success('Sucess', 'Sucessfully sent to Anki.', tata_settings)
+							console.log(data)
 						})
 						.catch((error) => console.log(error));
 				});
-			console.log("Sent to ANKI complete!\n");	
+			console.log("Sent to ANKI complete!\n");
 		}
 	);
 }
