@@ -143,7 +143,13 @@ function send_to_anki() {
 							tata.success('Sucess', 'Sucessfully sent to Anki.', tata_settings)
 							console.log(data)
 						})
-						.catch((error) => console.log(error));
+						.catch((error) => {
+							tata.error('Error', error, tata_settings)
+							console.log(error)
+						})
+				}).catch((error) => {
+					tata.error('Error', error, tata_settings)
+					console.log(error)
 				});
 			console.log("Sent to ANKI complete!\n");
 		}
