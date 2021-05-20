@@ -28,6 +28,7 @@ var fetchOptions = function (selectId, url, action, params = {}) {
 
 var saveOption = function (selectId) {
 	var selectEl = document.getElementById(selectId);
+	console.log({[selectId]: selectEl.value})
 	return chrome.storage.local.set({ [selectId]: selectEl.value })
 }
 
@@ -67,7 +68,9 @@ document.addEventListener("DOMContentLoaded", function () {
 					saveOption('ankiNoteNameSel'),
 
 					saveOption('ankiFieldScreenshot'),
-					saveOption('ankiFieldURL')
+					saveOption('ankiFieldURL'),
+
+					saveOption('ankiConnectUrl')
 				])
 					.then(() => alert(`Options saved!`))
 					.catch(error => alert(`Cannot save options: ${error}`))
