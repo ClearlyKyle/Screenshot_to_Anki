@@ -5,8 +5,8 @@ load_button();
 
 var tata_settings = {
 	position: "tr",
-	duration: 2000,
-	progress: true,
+	duration: 1000,
+	progress: false,
 	animation: 'slide',
 	holding: false
 }
@@ -140,14 +140,18 @@ function send_to_anki() {
 								tata.error('Error', data[1].error, tata_settings)
 								return
 							}
+
+							/* show sucess message */
 							tata.success('Sucess', 'Sucessfully sent to Anki.', tata_settings)
 							console.log(data)
 						})
 						.catch((error) => {
+							/* show error message */
 							tata.error('Error', error, tata_settings)
 							console.log(error)
 						})
 				}).catch((error) => {
+					/* show error message */
 					tata.error('Error', error, tata_settings)
 					console.log(error)
 				});
