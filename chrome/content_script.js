@@ -3,15 +3,10 @@ console.log("----- [content_script.js] LOADED");
 
 load_button();
 
-var tata_settings = {
-	position: "tr",
-	duration: 1000,
-	progress: false,
-	animation: 'slide',
-	holding: false
-}
+const notification_toast_time = 3000;
 
-function load_button() {
+function load_button()
+{
 	// Create Screen Shot Button
 	var ss_btn = document.createElement("button");
 	ss_btn.innerHTML = "Anki";
@@ -25,7 +20,8 @@ function load_button() {
 	console.log("Loaded Button");
 }
 
-function send_to_anki() {
+function send_to_anki()
+{
 	console.log("\nSending to ANKI");
 
 	var canvas = document.createElement("canvas");
@@ -57,7 +53,8 @@ function send_to_anki() {
 
 	console.log("loading user settings")
 	chrome.storage.local.get(["ankiDeckNameSel", "ankiNoteNameSel", "ankiFieldScreenshot", "ankiFieldURL", "ankiConnectUrl"],
-		({ ankiDeckNameSel, ankiNoteNameSel, ankiFieldScreenshot, ankiFieldURL, ankiConnectUrl }) => {
+		({ ankiDeckNameSel, ankiNoteNameSel, ankiFieldScreenshot, ankiFieldURL, ankiConnectUrl }) =>
+		{
 
 			console.log("local.get Data:")
 			console.log({ ankiDeckNameSel, ankiNoteNameSel, ankiFieldScreenshot, ankiFieldURL, ankiConnectUrl })
@@ -115,47 +112,75 @@ function send_to_anki() {
 				body: JSON.stringify(permission_data),
 			})
 				.then((res) => res.json())
-				.then((data) => {
-					if (data.error !== null) {
+				.then((data) =>
+				{
+					if (data.error !== null)
+					{
 						console.log("Permission Failed")
 						console.log(data);
 						return
 					}
 					console.log("Permission Granted")
 					console.log(data);
-					
+
 					fetch(url, {
 						method: "POST",
 						body: JSON.stringify(card_data),
 					})
 						.then((res) => res.json())
-						.then((data) => {
-							console.log("Fetch Return:")
-							console.log(data)
-							if (data[0].result === null) {
-								tata.error('Error', data.error, tata_settings)
-								return
-							}
-							if (data[1].result === null) {
-								tata.error('Error', data[1].error, tata_settings)
-								return
-							}
-
-							/* show sucess message */
-							tata.success('Sucess', 'Sucessfully sent to Anki.', tata_settings)
-							console.log(data)
-						})
-						.catch((error) => {
-							/* show error message */
-							tata.error('Error', error, tata_settings)
-							console.log(error)
-						})
-				}).catch((error) => {
-					/* show error message */
-					tata.error('Error', error, tata_settings)
-					console.log(error)
-				});
-			console.log("Sent to ANKI complete!\n");
-		}
-	);
+						.then((data) =>
+						{
+                            console.log("Fetch Return:")
+                            console.log(data)
+                            if (data.result === null)
+                            {
+                                // https://jsfiddle.net/2qasgcfd/3/
+                                // https://github.com/apvarun/toastify-js
+                                Toastify({
+                                    text: "Error! " + data,
+                                    duration: notification_toast_time,
+                                    style: {
+                                        background: "red",
+                                    }
+                                }).showToast();
+                                return
+                            }
+                            else
+                            {
+                                /* show sucess message */
+                                Toastify({
+                                    text: "Sucessfully added to ANKI",
+                                    duration: notification_toast_time,
+                                    style: {
+                                        background: "light blue",
+                                    }
+                                }).showToast();
+                            }
+                        })
+                        .catch((error) =>
+                        {
+                            /* show error message */
+                            Toastify({
+                                text: "Error! " + error,
+                                duration: notification_toast_time,
+                                style: {
+                                    background: "red",
+                                }
+                            }).showToast();
+                        })
+                }).catch((error) =>
+                {
+                    /* show error message */
+                    Toastify({
+                        text: "Error! " + error,
+                        duration: notification_toast_time,
+                        style: {
+                            background: "red",
+                        }
+                    }).showToast();
+                    console.log(error)
+                });
+            console.log("Send to ANKI complete!\n");
+        }
+    );
 }
