@@ -1,10 +1,7 @@
-
 (function ()
 {
 	/* This runs on all "youtube.com/watch" web pages */
 	console.log("----- [content_script.js] LOADED");
-
-	load_button();
 
 	const notification_toast_time = 3000;
 
@@ -187,4 +184,6 @@
 			}
 		);
 	}
-})
+
+	load_button();
+})();
